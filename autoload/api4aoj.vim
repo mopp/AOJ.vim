@@ -13,6 +13,18 @@
 "  'value': function('388')}
 " echomsg string(webapi#xml#parseURI('http://judge.u-aizu.ac.jp/onlinejudge/webservice/problem?id=0002&status=false'))
 
+"-----------------------------------------------------------------------------
+" Variables
+"-----------------------------------------------------------------------------
+" 値の存在チェックをするべきか
+let g:api4aoj#user_id = 's1200007'
+let g:api4aoj#passward = 'yk52MOPP'
+
+if !exists('g:api4aoj#can_use_lang_lst')
+    let g:api4aoj#can_use_lang_lst = [ 'C', 'C++', 'JAVA', 'C++11', 'C#', 'D', 'Ruby', 'Python', 'PHP', 'JavaScript' ]
+    lockvar 2 g:api4aoj#can_use_lang_lst
+endif
+
 
 "-----------------------------------------------------------------------------
 " Utils
@@ -25,6 +37,17 @@ function! s:fix_encoding_http_content(content)
     endif
 
     return iconv(a:content, charset, &enc)
+endfunction
+
+
+function! s:convert_file2str(file_path)
+    let file  = readfile(expand(a:file_path))
+    let str = ''
+    for line in file
+        let str .= line."\n"
+    endfor
+
+    return str
 endfunction
 
 
@@ -60,13 +83,15 @@ function! api4aoj#search_problem(p_id, isStatus)
 endfunction
 " echomsg string(api4aoj#search_problem('0002', 0).childNode('name').value())
 
+
+" Problem Description Get API
 function! api4aoj#get_problem_discription_lst(p_id)
     if type("") != type(a:p_id)
         throw 'ERROR - Type is mismatch @search_problem in api4aoj'
     endif
 
     " httpでgetした問題ページのデータを取得
-    let res = webapi#http#get(printf('http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=%s', a:p_id))
+    let res = webapi#http#get(printf('http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=%s&lang=jp', a:p_id))
 
     " 文字エンコードを修正
     let s:encoded_html = s:fix_encoding_http_content(res.content)
@@ -96,6 +121,8 @@ function! api4aoj#get_problem_discription_lst(p_id)
             let is_replace = 1
         elseif -1 != match(d_c.toString(), '<\(p\|pre\)\s*>')
             let str = '    '.d_c.value()
+        elseif -1 != match(string(d_c.toString()), '<h[1-9]\s*>')
+            let str  = "\n**" . substitute(d_c.value(), '\r\|\n', '', 'g') . '**'
         elseif -1 != match(string(d_c.attr), 'dat')
             let str = d_c.value()
             let str =  substitute(str, '\s*', '', 'g')
@@ -106,7 +133,7 @@ function! api4aoj#get_problem_discription_lst(p_id)
 
         if is_replace == 0
             " 改行を削除
-            let str  = substitute(str, '\r\|\n', '', 'g')
+            " let str  = substitute(str, '\r\|\n', '', 'g')
             let is_replace = 0
         endif
 
@@ -119,4 +146,40 @@ function! api4aoj#get_problem_discription_lst(p_id)
 
     return decoded_lst
 endfunction
-call s:debug()
+
+for line in api4aoj#get_problem_discription_lst('0100')
+    echo line
+endfor
+
+
+function! api4aoj#submit_code(code, p_id, lang)
+    if (type("") != type(a:code)) || (type("") != type(a:p_id)) || (type("") != type(a:lang))
+        throw 'ERROR - Type is mismatch @submit_code in api4aoj'
+    endif
+
+    if len(g:api4aoj#user_id) == 0
+        throw 'ERROR - UserID is Nothing @submit_code in api4aoj'
+    endif
+
+    if len(g:api4aoj#passward) == 0
+        throw 'ERROR - Passward is Nothing @submit_code in api4aoj'
+    endif
+
+    if index(g:api4aoj#can_use_lang_lst, a:lang) == -1
+        throw 'ERROR - Set Language is Nothing @submit_code in api4aoj'
+    endif
+
+    let param = {
+                \ 'userID'     : g:api4aoj#user_id,
+                \ 'password'   : g:api4aoj#passward,
+                \ 'sourceCode' : a:code,
+                \ 'problemNO'  : a:p_id,
+                \ 'language'   : a:lang,
+                \ }
+
+    return webapi#http#post('http://judge.u-aizu.ac.jp/onlinejudge/servlet/Submit', param)
+endfunction
+" call api4aoj#submit_code(s:convert_file2str('../sample_code/hello.c'), 10000, 'C')
+
+
+" http://judge.u-aizu.ac.jp/onlinejudge/lesson_description.jsp?lesson_id=ALDS1_7&id=A&lang=ja
