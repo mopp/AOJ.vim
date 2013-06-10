@@ -14,6 +14,14 @@ if !exists('g:api4aoj#can_use_lang_lst')
 endif
 
 
+" if !exists('g:api4aoj#user_id')
+    " let g:api4aoj#user_id = ''
+" endif
+
+" if !exists('g:api4aoj#password')
+    " g:api4aoj#password = ''
+" endif
+
 
 "-----------------------------------------------------------------------------
 " AOJ API

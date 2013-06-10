@@ -35,25 +35,3 @@ endfunction
 function! api4aoj#utils#remove_cr_eof(str)
     return substitute(a:str, '\r\|\n', '', 'g')
 endfunction
-
-
-function! api4aoj#utils#set_user_passward_to_variable()
-    let password = input('Prease Input Your AOJ Login Passward:')
-
-    if len(password) <= 1
-        throw 'ERROR - Passward is too short'
-    endif
-
-    let g:api4aoj#password = password
-endfunction
-
-
-function! api4aoj#utils#set_user_id_to_variable()
-    let id = input('Prease Input Your AOJ Login ID:')
-
-    if len(id) <= 1
-        throw 'ERROR - ID is too short'
-    endif
-
-    let g:api4aoj#user_id = id
-endfunction
