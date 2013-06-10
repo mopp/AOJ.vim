@@ -112,7 +112,7 @@ endfunction
 
 " Problem List Search (http://judge.u-aizu.ac.jp/onlinejudge/webservice/problem_list)
 function! api4aoj#get_problem_lst(volume_num)
-    let  parsed_xml = webapi#xml#parseURL(printf('http://judge.u-aizu.ac.jp/onlinejudge/webservice/problem_list?volume=%s', a:volume_num))
+    let parsed_xml = webapi#xml#parseURL(printf('http://judge.u-aizu.ac.jp/onlinejudge/webservice/problem_list?volume=%s', a:volume_num))
 
     let problem_lst = []
     for problem in parsed_xml.childNodes('problem')
@@ -125,4 +125,38 @@ function! api4aoj#get_problem_lst(volume_num)
     endfor
 
     return problem_lst
+endfunction
+
+
+" Get User Solved Info List (http://judge.u-aizu.ac.jp/onlinejudge/webservice/solved_record)
+function! api4aoj#get_user_solved_info_lst(u_id, ...)
+    if a:0 == 0
+        let parsed_xml = webapi#xml#parseURL(printf('http://judge.u-aizu.ac.jp/onlinejudge/webservice/solved_record?user_id=%s', a:u_id))
+    elseif a:0 == 1
+        " 第二引数があるとき
+        if index(g:api4aoj#can_use_lang_lst, a:000[0]) == -1
+            throw 'ERROR - Set Language is Nothing @get_user_solved_info_lst in api4aoj'
+        endif
+
+        let parsed_xml = webapi#xml#parseURL(printf('http://judge.u-aizu.ac.jp/onlinejudge/webservice/solved_record?user_id=%s&language=%s', a:u_id, a:000[0]))
+    endif
+
+    if len(parsed_xml.child) <= 1
+        return []
+    endif
+
+    let solved_lst = []
+    for solve in parsed_xml.childNodes('solved')
+        call add(solved_lst, {
+                    \ 'run_id'      : api4aoj#utils#remove_cr_eof(solve.childNode('run_id').value()),
+                    \ 'problem_id'  : api4aoj#utils#remove_cr_eof(solve.childNode('problem_id').value()),
+                    \ 'date'        : api4aoj#utils#remove_cr_eof(solve.childNode('date').value()),
+                    \ 'language'    : api4aoj#utils#remove_cr_eof(solve.childNode('language').value()),
+                    \ 'cputime'     : api4aoj#utils#remove_cr_eof(solve.childNode('cputime').value()),
+                    \ 'used_memory' : api4aoj#utils#remove_cr_eof(solve.childNode('memory').value()),
+                    \ 'code_size'   : api4aoj#utils#remove_cr_eof(solve.childNode('code_size').value()),
+                    \ })
+    endfor
+
+    return solved_lst
 endfunction
