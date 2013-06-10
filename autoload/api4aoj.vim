@@ -117,9 +117,9 @@ function! api4aoj#get_problem_lst(volume_num)
     let problem_lst = []
     for problem in parsed_xml.childNodes('problem')
         call add(problem_lst, {
-                    \ 'id' : problem.childNode('id').value(),
-                    \ 'name' : problem.childNode('name').value(),
-                    \ 'time_limit' : problem.childNode('problemtimelimit').value(),
+                    \ 'id'           : problem.childNode('id').value(),
+                    \ 'name'         : problem.childNode('name').value(),
+                    \ 'time_limit'   : problem.childNode('problemtimelimit').value(),
                     \ 'memory_limit' : problem.childNode('problemmemorylimit').value(),
                     \ })
     endfor
@@ -159,4 +159,38 @@ function! api4aoj#get_user_solved_info_lst(u_id, ...)
     endfor
 
     return solved_lst
+endfunction
+
+
+" Get Judge Status Log List (http://judge.u-aizu.ac.jp/onlinejudge/webservice/status_log)
+function! api4aoj#get_judge_status_log_lst(...)
+    if a:0 == 0
+        let parsed_xml = webapi#xml#parseURL('http://judge.u-aizu.ac.jp/onlinejudge/webservice/status_log')
+    elseif a:0 == 1
+        " 第二引数があるとき
+        " let parsed_xml = webapi#xml#parseURL(printf('http://judge.u-aizu.ac.jp/onlinejudge/webservice/status_log?user_id=%s', a:000[0]))
+        throw 'reserved!'
+    endif
+
+    if len(parsed_xml.child) <= 1
+        return []
+    endif
+
+    let status_lst = []
+    for status in parsed_xml.childNodes('status')
+        call add(status_lst, {
+                    \ 'run_id'              : api4aoj#utils#remove_cr_eof(status.childNode('run_id').value()),
+                    \ 'user_id'             : api4aoj#utils#remove_cr_eof(status.childNode('user_id').value()),
+                    \ 'problem_id'          : api4aoj#utils#remove_cr_eof(status.childNode('problem_id').value()),
+                    \ 'submission_date'     : api4aoj#utils#remove_cr_eof(status.childNode('submission_date').value()),
+                    \ 'submission_date_str' : api4aoj#utils#remove_cr_eof(status.childNode('submission_date_str').value()),
+                    \ 'status'              : api4aoj#utils#remove_cr_eof(status.childNode('status').value()),
+                    \ 'language'            : api4aoj#utils#remove_cr_eof(status.childNode('language').value()),
+                    \ 'cputime'             : api4aoj#utils#remove_cr_eof(status.childNode('cputime').value()),
+                    \ 'memory'              : api4aoj#utils#remove_cr_eof(status.childNode('memory').value()),
+                    \ 'code_size'           : api4aoj#utils#remove_cr_eof(status.childNode('code_size').value()),
+                    \ })
+    endfor
+
+    return status_lst
 endfunction
