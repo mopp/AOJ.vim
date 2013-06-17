@@ -85,6 +85,23 @@ endfunction
 " kind openableの各action実行関数
 function! s:source.action_table.openable.vsplit.func(candidate)
     echo string(a:candidate)
+    let selected_problem = a:candidate.source__selected_problem[0]
+
+    execute 'rightbelow vsplit ' '==AOJ==' . selected_problem.id . '_' . substitute(selected_problem.name, '\s', '', 'g')
+
+    setlocal buftype=nowrite
+    setlocal noswapfile
+    setlocal bufhidden=wipe
+    setlocal buftype=nofile
+    setlocal nolist
+    setlocal nofoldenable
+    setlocal textwidth=0
+    setlocal fileencodings=utf-8 fileencoding=utf-8
+
+    setlocal modifiable
+    call append(0, api4aoj#get_problem_discription_lst(selected_problem.id))
+    call cursor(1, 1)
+    setlocal nomodifiable
 endfunction
 
 
