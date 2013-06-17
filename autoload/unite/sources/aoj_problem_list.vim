@@ -87,7 +87,10 @@ function! s:source.action_table.openable.vsplit.func(candidate)
     echo string(a:candidate)
     let selected_problem = a:candidate.source__selected_problem[0]
 
-    execute 'rightbelow vsplit ' '==AOJ==' . selected_problem.id . '_' . substitute(selected_problem.name, '\s', '', 'g')
+    if bufexists('==AOJ==')
+        execute 'bwipeout! BATTLE_EDITORS'
+    endif
+    execute 'rightbelow vsplit ==AOJ=='
 
     setlocal buftype=nowrite
     setlocal noswapfile
@@ -99,7 +102,9 @@ function! s:source.action_table.openable.vsplit.func(candidate)
     setlocal fileencodings=utf-8 fileencoding=utf-8
 
     setlocal modifiable
-    call append(0, api4aoj#get_problem_discription_lst(selected_problem.id))
+    call append(0, selected_problem.id . ' - ' . selected_problem.name)
+    echomsg len(api4aoj#get_problem_discription_lst(selected_problem.id))
+    call append(1, api4aoj#get_problem_discription_lst(selected_problem.id))
     call cursor(1, 1)
     setlocal nomodifiable
 endfunction

@@ -1,6 +1,8 @@
 # AOJ.vim
 
-AOJたのしい
+It is Vim Plugin for View Problem and Submit Code at AOJ.
 
-## It is Developing NOW.
-## Not Work :(
+
+## Require
+Unite.vim
+webapi.vim
