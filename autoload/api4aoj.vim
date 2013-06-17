@@ -14,15 +14,6 @@ if !exists('g:api4aoj#can_use_lang_lst')
 endif
 
 
-" if !exists('g:api4aoj#user_id')
-    " let g:api4aoj#user_id = ''
-" endif
-
-" if !exists('g:api4aoj#password')
-    " g:api4aoj#password = ''
-" endif
-
-
 "-----------------------------------------------------------------------------
 " AOJ API
 "-----------------------------------------------------------------------------
@@ -125,10 +116,10 @@ function! api4aoj#get_problem_lst(volume_num)
     let problem_lst = []
     for problem in parsed_xml.childNodes('problem')
         call add(problem_lst, {
-                    \ 'id'           : problem.childNode('id').value(),
-                    \ 'name'         : problem.childNode('name').value(),
-                    \ 'time_limit'   : problem.childNode('problemtimelimit').value(),
-                    \ 'memory_limit' : problem.childNode('problemmemorylimit').value(),
+                    \ 'id'           : api4aoj#utils#remove_cr_eof(problem.childNode('id').value()),
+                    \ 'name'         : api4aoj#utils#remove_cr_eof(problem.childNode('name').value()),
+                    \ 'time_limit'   : api4aoj#utils#remove_cr_eof(problem.childNode('problemtimelimit').value()),
+                    \ 'memory_limit' : api4aoj#utils#remove_cr_eof(problem.childNode('problemmemorylimit').value()),
                     \ })
     endfor
 
