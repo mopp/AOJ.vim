@@ -18,6 +18,7 @@ endif
 " AOJ API
 "-----------------------------------------------------------------------------
 " Get Problem Description API (original)
+" @return (List) each elements contains each line
 function! api4aoj#get_problem_discription_lst(p_id)
     if type("") != type(a:p_id)
         throw 'ERROR - Type is mismatch @search_problem in api4aoj'
@@ -64,7 +65,7 @@ function! api4aoj#get_problem_discription_lst(p_id)
         let str = webapi#html#decodeEntityReference(str)
 
         if 0 != len(str)
-            call add(decoded_lst, str)
+            call add(decoded_lst, api4aoj#utils#remove_cr_eof(str))
         endif
     endfor
 
@@ -110,6 +111,7 @@ endfunction
 
 
 " Problem List Search (http://judge.u-aizu.ac.jp/onlinejudge/webservice/problem_list)
+" @return (Dictionary) id, name, time_limit, memory_limit
 function! api4aoj#get_problem_lst(volume_num)
     let parsed_xml = webapi#xml#parseURL(printf('http://judge.u-aizu.ac.jp/onlinejudge/webservice/problem_list?volume=%s', a:volume_num))
 
