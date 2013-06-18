@@ -19,7 +19,7 @@ endif
 "-----------------------------------------------------------------------------
 " Get Problem Description API (original)
 " @return (List) each elements contains each line
-function! api4aoj#get_problem_discription_lst(p_id)
+function! api4aoj#get_problem_description_lst(p_id)
     if type("") != type(a:p_id)
         throw 'ERROR - Type is mismatch @search_problem in api4aoj'
     endif
@@ -54,7 +54,7 @@ function! api4aoj#get_problem_discription_lst(p_id)
         elseif -1 != match(d_c.toString(), '<\(p\|pre\)\s*>')
             let str = '    '.d_c.value()
         elseif -1 != match(string(d_c.toString()), '<h[1-9]\s*>')
-            let str  = "\n**" . substitute(d_c.value(), '\r\|\n', '', 'g') . '**'
+            let str  = "--" . api4aoj#utils#remove_cr_eof(d_c.value()) . '--'
         elseif -1 != match(string(d_c.attr), 'dat')
             let str = substitute(d_c.value(), '\s*', '', 'g')
         else
@@ -63,11 +63,21 @@ function! api4aoj#get_problem_discription_lst(p_id)
 
         " 記号類をもとに戻す
         let str = webapi#html#decodeEntityReference(str)
+        let str = substitute(str, '&le;', '<=', 'g')
+        let str = substitute(str, '&ge;', '>=', 'g')
+        " let str = api4aoj#utils#remove_cr_eof(str)
+        let str_lst = split(str, "\r")
 
-        if 0 != len(str)
-            call add(decoded_lst, api4aoj#utils#remove_cr_eof(str))
+        if 0 != len(str_lst)
+            call extend(decoded_lst, str_lst)
         endif
     endfor
+
+    " NUL文字を削除
+    call map(decoded_lst, 'substitute(v:val, "\n", "", "g")')
+
+    " 空白のみの行を削除
+    " call filter(decoded_lst, 'len(substitute(v:val, "\s", "", "g"))')
 
     return decoded_lst
 endfunction
