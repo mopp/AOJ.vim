@@ -82,6 +82,7 @@ function! api4aoj#get_problem_description_lst(p_id)
     return decoded_lst
 endfunction
 
+
 " Submit Your Source Code (original)
 function! api4aoj#submit_code(u_id, password, code, p_id, lang)
     if index(g:api4aoj#can_use_lang_lst, a:lang) == -1

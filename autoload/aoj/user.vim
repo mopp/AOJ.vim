@@ -1,7 +1,7 @@
 function! aoj#user#set_password_to_variable()
-    let password = input('Prease Input Your AOJ Login Passward:')
+    let password = inputsecret('Prease Input Your AOJ Login Passward:')
 
-    if len(password) <= 1
+    if len(password) < 4
         throw 'ERROR - Passward is too short'
     endif
 
