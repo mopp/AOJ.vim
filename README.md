@@ -6,7 +6,7 @@ Default Interface is Unite.vim.
 This provides Unite-Source(AOJ/ProblemList).
 
 ## Require
-=========
+===========
 Unite.vim  
 webapi.vim
 
@@ -23,6 +23,13 @@ webapi.vim
 
 **:AOJViewStaticticsLogs**  
     It opens Submit Statistics List in unite buffer.
+
+## Configure
+=========
+    let g:aoj#user_id = 'Your ID'
+    NeoBundle 'mopp/AOJ.vim'
+    NeoBundle 'Shougo/unite.vim'
+    NeoBundle 'mattn/webapi-vim'
 
 ## Images
 =========
