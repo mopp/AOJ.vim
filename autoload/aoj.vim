@@ -1,3 +1,11 @@
+"-----------------------------------------------------------------------------
+" Control Functions
+"-----------------------------------------------------------------------------
+let s:save_cpo = &cpo
+set cpo&vim
+
+
+
 function! aoj#submit_code()
     if bufname('%') == '==AOJ=='
         echoerr 'Invalid buffer'
@@ -47,4 +55,11 @@ function! aoj#submit_code()
     \ g:aoj#now_selected_problem_id,
     \ submit_lang,
     \ )
+
+    AOJViewStaticticsLogs
 endfunction
+
+
+
+let &cpo = s:save_cpo
+unlet s:save_cpo

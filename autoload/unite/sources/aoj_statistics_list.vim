@@ -84,7 +84,7 @@ function! s:source.action_table.openable.vsplit.func(candidate)
     setlocal nomodifiable
     call cursor(1, 1)
 
-    noremap <buffer> q :q!<CR>
+    noremap <buffer><silent> q :q!<CR>
 
     wincmd w
 endfunction

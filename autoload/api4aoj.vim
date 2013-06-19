@@ -1,7 +1,9 @@
 "-----------------------------------------------------------------------------
-" autoload/api4aoj.vim
+" API for AOJ Functions
 "   http://judge.u-aizu.ac.jp/onlinejudge/api.jsp
 "-----------------------------------------------------------------------------
+let s:save_cpo = &cpo
+set cpo&vim
 
 
 
@@ -12,6 +14,7 @@ if !exists('g:api4aoj#can_use_lang_lst')
     let g:api4aoj#can_use_lang_lst = [ 'C', 'C++', 'JAVA', 'C++11', 'C#', 'D', 'Ruby', 'Python', 'PHP', 'JavaScript' ]
     lockvar 2 g:api4aoj#can_use_lang_lst
 endif
+
 
 
 "-----------------------------------------------------------------------------
@@ -221,7 +224,7 @@ function! api4aoj#get_judge_detail(run_id)
                 \ 'judgedate_locale'        : api4aoj#utils#remove_cr_eof(info.childNode('judgedate_locale').value()),
                 \ 'language'                : api4aoj#utils#remove_cr_eof(info.childNode('language').value()),
                 \ 'server'                  : api4aoj#utils#remove_cr_eof(info.childNode('server').value()),
-                \ 'cuptime'                 : api4aoj#utils#remove_cr_eof(info.childNode('cuptime').value()),
+                \ 'cputime'                 : api4aoj#utils#remove_cr_eof(info.childNode('cuptime').value()),
                 \ 'memory'                  : api4aoj#utils#remove_cr_eof(info.childNode('memory').value()),
                 \ 'code_size'               : api4aoj#utils#remove_cr_eof(info.childNode('code_size').value()),
                 \ 'status'                  : api4aoj#utils#remove_cr_eof(info.childNode('status').value()),
@@ -236,3 +239,8 @@ function! api4aoj#get_judge_detail(run_id)
                 \ 'affiliation'             : api4aoj#utils#remove_cr_eof(info.childNode('affiliation').value()),
                 \ }
 endfunction
+
+
+
+let &cpo = s:save_cpo
+unlet s:save_cpo

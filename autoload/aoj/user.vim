@@ -1,3 +1,8 @@
+let s:save_cpo = &cpo
+set cpo&vim
+
+
+
 function! aoj#user#set_password_to_variable()
     let password = inputsecret('Prease Input Your AOJ Login Passward:')
 
@@ -18,3 +23,8 @@ function! aoj#user#set_id_to_variable()
 
     let g:aoj#user_id = id
 endfunction
+
+
+
+let &cpo = s:save_cpo
+unlet s:save_cpo

@@ -1,6 +1,10 @@
 "-----------------------------------------------------------------------------
 " Util Functions
 "-----------------------------------------------------------------------------
+let s:save_cpo = &cpo
+set cpo&vim
+
+
 
 function! api4aoj#utils#fix_encoding_http_content(content)
     let charset = matchstr(a:content, '<meta[^>]\+content=["''][^;"'']\+;\s*charset=\zs[^;"'']\+\ze["''][^>]*>')
@@ -35,3 +39,8 @@ endfunction
 function! api4aoj#utils#remove_cr_eof(str)
     return substitute(a:str, '\r\|\n', '', 'g')
 endfunction
+
+
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
