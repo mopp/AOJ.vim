@@ -1,8 +1,7 @@
 # AOJ.vim
 
-It is Vim Plugin for View Problem and Submit Code at AOJ.
-
+It is Vim Plugin for View and Submit at AOJ.
 
 ## Require
-Unite.vim
+Unite.vim  
 webapi.vim
