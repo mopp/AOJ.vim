@@ -55,7 +55,7 @@ function! s:source.gather_candidates(args, context)
             call add(candidates, {
                         \ 'word' : 'Volume - ' . i,
                         \ 'kind' : 'source',
-                        \ 'action__source_name' : 'AOJ/ProblemList',
+                        \ 'action__source_name' : 'AOJ_Problems',
                         \ 'action__source_args' : [i],
                         \ })
         endfor
