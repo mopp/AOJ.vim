@@ -10,7 +10,7 @@ endfunction
 
 
 let s:source = {
-            \ 'name' : 'AOJ/StatisticsList',
+            \ 'name' : 'AOJ_Statictics',
             \ 'description' : 'candidates from AOJ Statistics List',
             \ 'is_volatile' : 0,
             \ 'action_table' : {
