@@ -177,7 +177,7 @@ endfunction
 " Get Judge Status Log List (http://judge.u-aizu.ac.jp/onlinejudge/webservice/status_log)
 function! api4aoj#get_judge_status_log_lst(...)
     if a:0 == 0
-        let parsed_xml = webapi#xml#parseURL('http://judge.u-aizu.ac.jp/onlinejudge/webservice/status_log')
+        let parsed_xml = webapi#xml#parseURL('http://judge.u-aizu.ac.jp/onlinejudge/webservice/status_log?limit=50')
     elseif a:0 == 1
         " 第二引数があるとき
         " let parsed_xml = webapi#xml#parseURL(printf('http://judge.u-aizu.ac.jp/onlinejudge/webservice/status_log?user_id=%s', a:000[0]))
@@ -205,4 +205,34 @@ function! api4aoj#get_judge_status_log_lst(...)
     endfor
 
     return status_lst
+endfunction
+
+
+function! api4aoj#get_judge_detail(run_id)
+    let info = webapi#xml#parseURL('http://judge.u-aizu.ac.jp/onlinejudge/webservice/judge?id=' . a:run_id)
+
+    return {
+                \ 'judge_id'                : api4aoj#utils#remove_cr_eof(info.childNode('judge_id').value()),
+                \ 'judge_type_code'         : api4aoj#utils#remove_cr_eof(info.childNode('judge_type_code').value()),
+                \ 'judge_type'              : api4aoj#utils#remove_cr_eof(info.childNode('judge_type').value()),
+                \ 'submissiondate'          : api4aoj#utils#remove_cr_eof(info.childNode('submissiondate').value()),
+                \ 'judgedate'               : api4aoj#utils#remove_cr_eof(info.childNode('judgedate').value()),
+                \ 'submissiondate_locale'   : api4aoj#utils#remove_cr_eof(info.childNode('submissiondate_locale').value()),
+                \ 'judgedate_locale'        : api4aoj#utils#remove_cr_eof(info.childNode('judgedate_locale').value()),
+                \ 'language'                : api4aoj#utils#remove_cr_eof(info.childNode('language').value()),
+                \ 'server'                  : api4aoj#utils#remove_cr_eof(info.childNode('server').value()),
+                \ 'cuptime'                 : api4aoj#utils#remove_cr_eof(info.childNode('cuptime').value()),
+                \ 'memory'                  : api4aoj#utils#remove_cr_eof(info.childNode('memory').value()),
+                \ 'code_size'               : api4aoj#utils#remove_cr_eof(info.childNode('code_size').value()),
+                \ 'status'                  : api4aoj#utils#remove_cr_eof(info.childNode('status').value()),
+                \ 'accuracy'                : api4aoj#utils#remove_cr_eof(info.childNode('accuracy').value()),
+                \ 'problem_id'              : api4aoj#utils#remove_cr_eof(info.childNode('problem_id').value()),
+                \ 'problem_title'           : api4aoj#utils#remove_cr_eof(info.childNode('problem_title').value()),
+                \ 'submissions'             : api4aoj#utils#remove_cr_eof(info.childNode('submissions').value()),
+                \ 'accepted'                : api4aoj#utils#remove_cr_eof(info.childNode('accepted').value()),
+                \ 'solved'                  : api4aoj#utils#remove_cr_eof(info.childNode('solved').value()),
+                \ 'user_id'                 : api4aoj#utils#remove_cr_eof(info.childNode('user_id').value()),
+                \ 'user_name'               : api4aoj#utils#remove_cr_eof(info.childNode('user_name').value()),
+                \ 'affiliation'             : api4aoj#utils#remove_cr_eof(info.childNode('affiliation').value()),
+                \ }
 endfunction
