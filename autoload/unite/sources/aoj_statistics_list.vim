@@ -1,6 +1,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+let s:judge_status_lst = [ 'Compile Error', 'Wrong Answer', 'Time Limit Exceeded', 'Memory Limit Exceeded', 'Accepted', 'Output Limit Exceeded', 'Runtime Error', 'Presentation Error', ]
 
 
 function! unite#sources#aoj_statistics_list#define()
@@ -45,12 +46,13 @@ endfunction
 " kind openableの各action実行関数
 function! s:source.action_table.openable.vsplit.func(candidate)
     let selected_log = a:candidate.source__selected_statistics_log[0]
-    let description_lst = api4aoj#get_problem_description_lst(selected_problem.id)
+    let judge_info_dict = api4aoj#get_judge_detail(selected_log.run_id)
 
     if bufexists('==AOJ_Log==')
-        execute 'bwipeout! ==AOJ=='
+        execute 'bwipeout! ==AOJ_Log=='
     endif
-    execute 'topleft vsplit ==AOJ=='
+    execute 'botright split ==AOJ_Log=='
+    resize 12
 
     setlocal buftype=nowrite
     setlocal noswapfile
@@ -63,15 +65,28 @@ function! s:source.action_table.openable.vsplit.func(candidate)
     setlocal fileencodings=utf-8 fileencoding=utf-8
     setlocal filetype=text
 
+    let format = '%14s - %10s'
+    let str_lst = []
+    call add(str_lst, printf(format, 'Run ID',          judge_info_dict.judge_id))
+    call add(str_lst, printf(format, 'Status',          s:judge_status_lst[judge_info_dict.status]))
+    call add(str_lst, printf(format, 'Problem ID',      judge_info_dict.problem_id))
+    call add(str_lst, printf(format, 'Problem Title',   judge_info_dict.problem_title))
+    call add(str_lst, printf(format, 'User ID',         judge_info_dict.user_id))
+    call add(str_lst, printf(format, 'Judge Type',      judge_info_dict.judge_type))
+    call add(str_lst, printf(format, 'Submition Date',  strftime("%Y-%m-%d %H:%M:%S", judge_info_dict.language)))
+    call add(str_lst, printf(format, 'Language',        judge_info_dict.submissiondate_locale))
+    call add(str_lst, printf(format, 'CPU Time',        judge_info_dict.cputime))
+    call add(str_lst, printf(format, 'Memory',          judge_info_dict.memory))
+    call add(str_lst, printf(format, 'Code Size',       judge_info_dict.code_size))
+
     setlocal modifiable
-    call append(0, selected_problem.id . ' - ' . selected_problem.name)
-    call append(1, '')
-    call append(2, description_lst)
+    call append(0, str_lst)
     setlocal nomodifiable
     call cursor(1, 1)
 
-    let g:aoj#now_selected_problem_id = selected_problem.id
-    " let b:aoj_now_selected_problem_id = selected_problem.id
+    noremap <buffer> q :q!<CR>
+
+    wincmd w
 endfunction
 
 
