@@ -10,10 +10,7 @@ set cpo&vim
 "-----------------------------------------------------------------------------
 " Variables
 "-----------------------------------------------------------------------------
-if !exists('g:api4aoj#can_use_lang_lst')
-    let g:api4aoj#can_use_lang_lst = [ 'C', 'C++', 'JAVA', 'C++11', 'C#', 'D', 'Ruby', 'Python', 'PHP', 'JavaScript' ]
-    lockvar 2 g:api4aoj#can_use_lang_lst
-endif
+let g:api4aoj#can_use_lang_lst = get(g:, 'api4aoj#can_use_lang_lst', [ 'C', 'C++', 'JAVA', 'C++11', 'C#', 'D', 'Ruby', 'Python', 'PHP', 'JavaScript' ])
 
 
 
