@@ -2,7 +2,7 @@ AOJ.vim
 =======
 * * *
 
-This is Vim Plugin for View and Submit at AOJ.  
+This is Vim Plugin for View and Submit at AOJ(http://judge.u-aizu.ac.jp/onlinejudge/index.jsp).  
 Default Interface is Unite.vim.  
 This provides Unite-Source(AOJ/ProblemList).
 
@@ -17,7 +17,7 @@ Command
 -------
 * * *
 **:AOJSubmit**  
-    When You open one of problems, It Submits Your source code to AOJ(http://judge.u-aizu.ac.jp/onlinejudge/index.jsp).  
+    When You open one of problems, It Submits Your source code to AOJ.  
     Then, AOJ.vim will open unite buffer.  
     If You cannot see your ID in it, Please execute redraw command like <C-L> in unite buffer.  
 
