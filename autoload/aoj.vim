@@ -6,15 +6,20 @@ set cpo&vim
 
 
 
-function! aoj#submit_code()
+function! aoj#submit_code(...)
     if bufname('%') == '==AOJ=='
         echoerr 'Invalid buffer'
         return
     endif
 
-    if !exists('g:aoj#now_selected_problem_id')
-        echoerr 'Problem ID is Nothing !'
-        return
+    if a:0 == 0
+        if !exists('g:aoj#now_selected_problem_id')
+            echoerr 'Problem ID is Nothing !'
+            return
+        endif
+        let problem_id = g:aoj#now_selected_problem_id
+    elseif a:0 == 1
+        let problem_id = a:000[0]
     endif
 
     let ft = &filetype
@@ -41,20 +46,13 @@ function! aoj#submit_code()
 
     let code = join(getline(1, line('$')), "\n")
 
-    " echomsg g:aoj#user_id
-    " echomsg g:aoj#password
-    " echomsg code
-    " echomsg g:aoj#now_selected_problem_id
-    " echomsg submit_lang
-    " echomsg s:urlencode_char(code)
-
     call api4aoj#submit_code(
-    \ g:aoj#user_id,
-    \ g:aoj#password,
-    \ code,
-    \ g:aoj#now_selected_problem_id,
-    \ submit_lang,
-    \ )
+                \ g:aoj#user_id,
+                \ g:aoj#password,
+                \ code,
+                \ problem_id,
+                \ submit_lang,
+                \ )
 
     AOJViewStaticticsLogs
 endfunction
