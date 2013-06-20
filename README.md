@@ -21,6 +21,10 @@ Command
     Then, AOJ.vim will open unite buffer.  
     If You cannot see your ID in it, Please execute redraw command like <C-L> in unite buffer.  
 
+**:AOJSubmitByProblemID**  
+    You pass Problem ID as argument.
+    Other behaver is same :AOJSubmit
+
 **:AOJViewProblems**  
     It opens Problem List in unite buffer.  
 
