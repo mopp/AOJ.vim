@@ -1,5 +1,10 @@
-" enable Language
-let g:api4aoj#can_use_lang_lst = [ 'C', 'C++', 'JAVA', 'C++11', 'C#', 'D', 'Ruby', 'Python', 'PHP', 'JavaScript' ]
+if exists('g:loaded_aoj') || 1 == &compatible
+    finish
+endif
+let g:loaded_aoj= 1
+
+" Enable Language
+let g:api4aoj#can_use_lang_lst = get(g:, 'api4aoj#can_use_lang_lst', [ 'C', 'C++', 'JAVA', 'C++11', 'C#', 'D', 'Ruby', 'Python', 'PHP', 'JavaScript' ])
 
 
 " Command
