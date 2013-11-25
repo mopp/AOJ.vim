@@ -4,7 +4,7 @@ endif
 let g:loaded_aoj= 1
 
 " Enable Language
-let g:api4aoj#can_use_lang_dict = get(g:, 'api4aoj#can_use_lang_dict', { 'c' : 'C', 'cpp' : 'C++', 'java' : 'JAVA', 'cs' : 'C#','d' : 'D', 'ruby' : 'Ruby', 'python' : 'Python', 'php' : 'PHP', 'js' : 'JavaScript' })
+let g:api4aoj#can_use_lang_dict = get(g:, 'api4aoj#can_use_lang_dict', { 'c' : 'C', 'cpp' : 'C++', 'java' : 'JAVA', 'cs' : 'C#','d' : 'D', 'rb' : 'Ruby', 'python' : 'Python', 'php' : 'PHP', 'js' : 'JavaScript' })
 
 
 " Command
