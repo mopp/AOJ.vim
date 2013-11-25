@@ -10,8 +10,8 @@ set cpo&vim
 "-----------------------------------------------------------------------------
 " Variables
 "-----------------------------------------------------------------------------
-let g:api4aoj#can_use_lang_lst = get(g:, 'api4aoj#can_use_lang_lst', [ 'C', 'C++', 'JAVA', 'C++11', 'C#', 'D', 'Ruby', 'Python', 'PHP', 'JavaScript' ])
-
+" let g:api4aoj#can_use_lang_lst = get(g:, 'api4aoj#can_use_lang_lst', [ 'C', 'C++', 'JAVA', 'C++11', 'C#', 'D', 'Ruby', 'Python', 'PHP', 'JavaScript' ])
+" pluginの中での宣言に変更
 
 
 "-----------------------------------------------------------------------------
@@ -65,7 +65,6 @@ function! api4aoj#get_problem_description_lst(p_id)
         let str = webapi#html#decodeEntityReference(str)
         let str = substitute(str, '&le;', '<=', 'g')
         let str = substitute(str, '&ge;', '>=', 'g')
-        " let str = api4aoj#utils#remove_cr_eof(str)
         let str_lst = split(str, "\r")
 
         if 0 != len(str_lst)
@@ -85,7 +84,7 @@ endfunction
 
 " Submit Your Source Code (original)
 function! api4aoj#submit_code(u_id, password, code, p_id, lang)
-    if index(g:api4aoj#can_use_lang_lst, a:lang) == -1
+    if has_key(g:api4aoj#can_use_lang_dict, a:lang) == -1
         throw 'ERROR - Set Language is Nothing @submit_code in api4aoj'
     endif
 
@@ -94,7 +93,7 @@ function! api4aoj#submit_code(u_id, password, code, p_id, lang)
                 \ 'password'   : a:password,
                 \ 'sourceCode' : a:code,
                 \ 'problemNO'  : a:p_id,
-                \ 'language'   : a:lang,
+                \ 'language'   : g:api4aoj#can_use_lang_dict[a:lang],
                 \ }
 
     return webapi#http#post('http://judge.u-aizu.ac.jp/onlinejudge/servlet/Submit', param)
@@ -146,7 +145,7 @@ function! api4aoj#get_user_solved_info_lst(u_id, ...)
         let parsed_xml = webapi#xml#parseURL(printf('http://judge.u-aizu.ac.jp/onlinejudge/webservice/solved_record?user_id=%s', a:u_id))
     elseif a:0 == 1
         " 第二引数があるとき
-        if index(g:api4aoj#can_use_lang_lst, a:000[0]) == -1
+        if has_key(g:api4aoj#can_use_lang_dict, a:000[0]) == -1
             throw 'ERROR - Set Language is Nothing @get_user_solved_info_lst in api4aoj'
         endif
 

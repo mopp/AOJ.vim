@@ -24,9 +24,9 @@ function! aoj#submit_code(...)
 
     let ft = &filetype
     let submit_lang = ''
-    for lang in g:api4aoj#can_use_lang_lst
-        if lang ==? ft
-            let submit_lang = lang
+    for key in keys(g:api4aoj#can_use_lang_dict)
+        if key ==? ft
+            let submit_lang = key
             break
         endif
     endfor
